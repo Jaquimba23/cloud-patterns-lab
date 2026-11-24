@@ -1,0 +1,16 @@
+services:
+  price-service:
+    build: ./price-service
+    container_name: price-service
+    ports:
+      - "8081:8081"
+
+  orders-service:
+    build: ./orders-service
+    container_name: orders-service
+    environment:
+      PRICE_URL: http://price-service:8081
+    ports:
+      - "8080:8080"
+    depends_on:
+      - price-service

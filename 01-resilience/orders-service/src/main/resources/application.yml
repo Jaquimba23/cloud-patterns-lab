@@ -1,0 +1,49 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: orders-service
+
+# URL del servicio de precios (en Docker Compose se sobreescribe con PRICE_URL)
+price:
+  url: ${PRICE_URL:http://localhost:8081}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,circuitbreakers,circuitbreakerevents,retries,retryevents
+  health:
+    circuitbreakers:
+      enabled: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      price:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10                 # se evalúan las últimas 10 llamadas
+        minimumNumberOfCalls: 5               # mínimo 5 llamadas antes de evaluar
+        failureRateThreshold: 50              # abre si falla el 50 % o más
+        waitDurationInOpenState: 10s          # tiempo en ABIERTO
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        recordExceptions:
+          - org.springframework.web.client.ResourceAccessException
+          - org.springframework.web.client.HttpServerErrorException
+          - lab.orders.PriceTimeoutException
+  retry:
+    instances:
+      price:
+        maxAttempts: 3                        # 1 intento + 2 reintentos
+        waitDuration: 500ms                   # primera espera
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2       # 500 ms, luego 1 s
+        retryExceptions:
+          - org.springframework.web.client.ResourceAccessException
+          - org.springframework.web.client.HttpServerErrorException
+        ignoreExceptions:                     # estos NO se reintentan
+          - lab.orders.PriceTimeoutException
+          - io.github.resilience4j.circuitbreaker.CallNotPermittedException
