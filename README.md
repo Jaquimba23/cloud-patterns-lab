@@ -1,6 +1,6 @@
 # cloud-patterns-lab
 
-Prácticas del *Research Assignment: Cloud Architecture and Design Patterns* (Programación Distribuida, UNEMI).
+Prácticas del *Research Assignment: Cloud Architecture and Design Patterns* (Programación Distribuida).
 
 | Carpeta | Tema |
 |---|---|
