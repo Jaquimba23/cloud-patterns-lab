@@ -1,0 +1,12 @@
+{
+  "Records": [
+    {
+      "eventSource": "aws:s3",
+      "eventName": "ObjectCreated:Put",
+      "s3": {
+        "bucket": { "name": "mi-bucket-demo" },
+        "object": { "key": "prueba.txt", "size": 12 }
+      }
+    }
+  ]
+}
