@@ -1,0 +1,5 @@
+export/
+migration-package.tar.gz
+.terraform/
+*.tfstate
+*.tfstate.*

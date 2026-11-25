@@ -1,0 +1,6 @@
+services:
+  onprem-server:
+    build: ./onprem
+    container_name: onprem-server
+    ports:
+      - "8090:80"
